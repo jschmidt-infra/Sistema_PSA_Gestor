@@ -40,7 +40,7 @@ Para instruções detalhadas de como configurar, rodar e interagir com cada part
 
 ## 🚦 Status do Projeto
 
-* **Backend:** Funcionalmente completo, com rotas abertas para integração, motor de cálculo financeiro testado via unidades automatizadas e upload de arquivos integrado.
+* **Backend:** Funcionalmente completo, com rotas abertas para integração, motor de cálculo financeiro testado via unidades automatizadas e upload de arquivos integrado.  (Em desenvolvimento).
 
 * **Front-end:** Em fase de integração com os endpoints da API.
 
