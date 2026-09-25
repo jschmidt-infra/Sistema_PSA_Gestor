@@ -111,9 +111,11 @@ Esses endereços identificam o destino da publicação e não constituem confirm
 
 O frontend será servido como arquivos estáticos pelo Nginx. O backend acessará o MariaDB pela rede privada do ambiente Docker.
 
-Para contratos e croquis, a proposta atual utiliza **volume persistente do Docker**, com referências aos arquivos no banco e download autorizado pela API. Cloudflare R2 não faz parte dessa proposta de armazenamento. O Cloudflare Tunnel é utilizado para disponibilizar o acesso web.
+Contratos e croquis serão armazenados em **bucket privado do Cloudflare R2**, com a chave do objeto (`arquivo_chave`) e o vínculo ao registro salvos no **MariaDB**. O bucket será definido na configuração do backend. Upload e download passarão pela API, que validará o perfil e a permissão sobre cada arquivo. Credenciais R2 ficarão somente no backend; URLs temporárias não serão usadas como referências persistentes no banco.
 
-Credenciais e tokens devem ficar fora do repositório. O planejamento de backup contempla o banco e os arquivos persistidos.
+A API acessará o R2 por sua interface compatível com S3. O envio do objeto deverá ser confirmado antes de registrar o arquivo como disponível; falhas entre R2 e banco exigirão tratamento de objetos órfãos. Documentos de contratos aprovados serão preservados. O Cloudflare Tunnel continuará responsável pelo acesso web ao sistema.
+
+Credenciais e tokens devem ficar fora do repositório. O planejamento de backup contempla o MariaDB e uma cópia independente dos objetos R2, preservando as chaves para recuperação conjunta. O volume persistente do MariaDB permanece necessário; os anexos não dependem de um volume persistente no backend.
 
 ## 📚 Documentação por módulo
 
