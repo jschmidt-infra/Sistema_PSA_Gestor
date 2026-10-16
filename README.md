@@ -1,6 +1,6 @@
 # 🌿 PSA Gestor — Pagamento por Serviços Ambientais
 
-Projeto acadêmico desenvolvido na disciplina de **Projeto Integrador**, voltado à gestão de um programa de Pagamento por Serviços Ambientais (PSA).
+Projeto acadêmico desenvolvido na disciplina de **Análise e Projeto de Sistemas**, voltado à gestão de um programa de Pagamento por Serviços Ambientais (PSA).
 
 O sistema reúne cadastro de produtores e propriedades, diagnóstico ambiental, cálculo de incentivos, contratação e acompanhamento financeiro simulado. A interface web será responsiva, acessível pelo navegador em computadores e celulares.
 
