@@ -1,147 +1,294 @@
 # 🌿 PSA Gestor — Pagamento por Serviços Ambientais
 
-Projeto acadêmico desenvolvido na disciplina de **Projeto Integrador** para apoiar o cadastro de produtores e propriedades, o diagnóstico ambiental, o cálculo de incentivos, a geração de contratos e o acompanhamento financeiro simulado de um programa de Pagamento por Serviços Ambientais (PSA).
+Projeto acadêmico desenvolvido na disciplina de **Projeto Integrador**, voltado à gestão de um programa de Pagamento por Serviços Ambientais (PSA).
 
-O objetivo é entregar um **protótipo funcional**, acompanhado de requisitos, arquitetura, diagramas e testes. A equipe é composta por **cinco integrantes**, com entrega prevista para **11/12/2026**.
+O sistema reúne cadastro de produtores e propriedades, diagnóstico ambiental, cálculo de incentivos, contratação e acompanhamento financeiro simulado. A interface web será responsiva, acessível pelo navegador em computadores e celulares.
 
-## 🎯 Escopo do protótipo
+O objetivo é entregar um **protótipo funcional**, acompanhado de documentação de requisitos, arquitetura, diagramas UML e testes.
 
-- Autenticação e controle de acesso por perfis: administrador, gestor, técnico e produtor.
-- Cadastro de produtores, propriedades e fontes hídricas, incluindo o registro explícito da ausência de fontes.
+## 🎯 Escopo do projeto
+
+As funcionalidades previstas incluem:
+
+- Autenticação e controle de acesso por perfis.
+- Cadastro de produtores, propriedades, fontes hídricas, sub-bacias e projetos.
+- Registro explícito da ausência de fontes hídricas na propriedade.
 - Diagnóstico ambiental com salvamento progressivo, retomada e correção controlada.
-- Configuração dos parâmetros de cálculo por projeto.
-- Apuração da pontuação e do valor anual do PSA.
-- Registro de croquis, visitas técnicas e geração de contratos a partir de modelo preliminar.
+- Configuração de questionários, pesos e parâmetros de cálculo.
+- Apuração da pontuação ambiental e do valor anual do PSA.
+- Registro de croquis e visitas técnicas.
+- Geração de contratos a partir do modelo definido para o programa.
 - Registro de assinatura simulada.
-- Registro manual de saldo inicial, aportes e pagamentos totais ou parciais.
-- Consulta de saldo disponível, valores comprometidos, relatórios e vigências.
-- Consulta restrita do produtor aos próprios dados, contratos e repasses.
+- Gestão de saldo inicial, aportes, reservas e pagamentos totais ou parciais.
+- Consulta de saldos, contratos, vigências e relatórios.
+- Acesso restrito do produtor às próprias informações e repasses.
 
-O sistema não realiza transferências bancárias. Os recursos e pagamentos são simulados para demonstração acadêmica. Integração bancária, assinatura digital com validade jurídica, SIG completo, integração com MUDA e sincronização offline não integram o escopo atual.
+**Os pagamentos são simulados.** O sistema não realiza transferências bancárias.
 
-## 🏗️ Arquitetura e organização
+Integração bancária, assinatura digital com validade jurídica, sistema completo de informações geográficas, integração com MUDA e sincronização offline não integram o escopo atual.
 
-O backend será uma única aplicação Spring Boot, organizada por módulos de negócio. O frontend Angular consumirá a API REST e terá interface responsiva para navegadores de computadores e celulares.
+## 🏗️ Arquitetura
 
-Organização prevista do repositório:
+O backend adota uma arquitetura de **monólito modular**: uma aplicação Spring Boot organizada por módulos de negócio, com separação entre API, serviços, persistência e modelos.
+
+O frontend Angular consumirá a API REST. A publicação será realizada em uma VPS, com serviços em contêineres Docker e acesso HTTPS pelo Nginx Proxy Manager.
+
+### Organização prevista do repositório
 
 ```text
-psa-gestor/
+Sistema_PSA_Gestor/
 ├── README.md               # Visão geral do projeto
 ├── api/                    # Backend Java e Spring Boot
 │   └── README.md           # Execução, endpoints, segurança e testes
 ├── front/                  # Frontend Angular
 │   └── README.md           # Execução, telas, rotas e integração
-└── vps/                    # Configurações de infraestrutura do Mini PC
-    └── README.md           # Docker, publicação, volumes e backup
+└── vps/                    # Infraestrutura e publicação
+    └── README.md           # Contêineres, rede, configurações e backups
 ```
 
-O nome `vps/` é mantido como organização da infraestrutura; a hospedagem definida para o projeto é um Mini PC próprio.
+### Módulos do backend
+
+| Módulo | Responsabilidade |
+| --- | --- |
+| `acesso` | Contas, autenticação, sessões e autorização. |
+| `cadastros` | Produtores, propriedades, sub-bacias e projetos. |
+| `configuracao` | Parâmetros de cálculo e questionários versionados. |
+| `diagnostico` | Avaliações ambientais e respostas. |
+| `calculo` | Fórmula do PSA e memória de cálculo. |
+| `contratos` | Contratos, exercícios anuais e documentos relacionados. |
+| `financeiro` | Recursos, reservas e pagamentos simulados. |
+| `consultas` | Consultas e relatórios conforme o perfil. |
+| `arquivos` | Integração com o armazenamento privado de arquivos. |
+| `cache` | Cache opcional de indicadores não financeiros. |
+| `comum` | Tratamento de erros e recursos compartilhados. |
+
+A existência de um módulo na estrutura não significa que todas as suas funcionalidades estejam implementadas.
 
 ## 🛠️ Tecnologias
 
-| Camada | Tecnologia | Versão / definição |
-|---|---|---|
-| Backend | Java | 25; atualização e distribuição padronizadas pela equipe |
+| Camada | Tecnologia | Versão ou definição |
+| --- | --- | --- |
+| Backend | Java | 25; JDK utilizado no desenvolvimento: 25.0.4.1 |
 | Framework | Spring Boot | 4.1.1 |
-| API REST | Spring Web MVC | Starter do Spring Boot 4.1.1 |
-| Segurança | Spring Security | Gerenciada pelo Spring Boot |
-| Persistência | Spring Data JPA e Hibernate ORM | Gerenciadas pelo Spring Boot |
-| Validação | Jakarta Validation / Hibernate Validator | Gerenciada pelo Spring Boot |
-| Banco de dados | MariaDB Server | 13.0.2, já instalado conforme informado pelo responsável |
-| Driver JDBC | MariaDB Connector/J | Gerenciado pelo Spring Boot |
+| API REST | Spring Web MVC | Versão gerenciada pelo Spring Boot |
+| Segurança | Spring Security | Autenticação por sessão e proteção CSRF |
+| Persistência | Spring Data JPA e Hibernate ORM | Versões gerenciadas pelo Spring Boot |
+| Validação | Jakarta Validation e Hibernate Validator | Versões gerenciadas pelo Spring Boot |
+| Banco de dados | MariaDB Server | 13.0.2 |
+| Migrações | Flyway | Evolução versionada do esquema |
 | Frontend | Angular | 21 |
-| Build do backend | Maven Wrapper | Proposta: Maven 3.9.16 |
-| Documentação da API | springdoc-openapi / Swagger UI | Proposta: 3.1.1 |
-| Testes | JUnit Jupiter e Mockito | Gerenciados pelo Spring Boot; JUnit 6 na base 4.1.1 |
-| Publicação | Docker, Portainer e Cloudflare Tunnel | Ambiente definido pela equipe |
+| Build do backend | Maven Wrapper | 3.9.11 |
+| Testes | JUnit Jupiter, Spring Test e MockMvc | Testes unitários e de integração |
+| Banco de teste | H2 | Exclusivamente para testes automatizados locais |
+| Cache | Redis | Integração prevista para indicadores não financeiros |
+| Arquivos | Cloudflare R2 | Bucket privado, compatível com a API S3 |
+| Contêineres | Docker | Execução dos serviços na VPS |
+| Proxy reverso | Nginx Proxy Manager | Entrada HTTPS e encaminhamento das requisições |
+| Arquivos estáticos | Nginx | Publicação do frontend |
 
-As dependências gerenciadas devem herdar suas versões do Spring Boot, evitando sobrescritas individuais sem necessidade. As versões efetivamente adotadas ficam registradas no `pom.xml`, no Maven Wrapper e no arquivo de dependências do frontend.
+As versões das dependências gerenciadas são herdadas do Spring Boot. As definições efetivamente utilizadas devem ser consultadas no `pom.xml`, no Maven Wrapper e nos arquivos de dependências do frontend.
 
-Referências: [Spring Boot — compatibilidade](https://docs.spring.io/spring-boot/system-requirements.html), [dependências gerenciadas](https://docs.spring.io/spring-boot/appendix/dependency-versions/coordinates.html), [Maven](https://maven.apache.org/download.cgi) e [springdoc](https://springdoc.org/).
+A documentação interativa com **OpenAPI/Swagger UI** está prevista para uma etapa posterior.
 
-## 🔐 Acesso e perfis
+## 🔐 Autenticação e permissões
 
-Não haverá cadastro público de usuários. A conta inicial de administrador será criada previamente, e o administrador será responsável pela criação das demais contas.
+Não haverá cadastro público de usuários. O administrador inicial será provisionado previamente, e a criação das demais contas será realizada pelo administrador.
 
-| Perfil | Responsabilidade principal |
-|---|---|
+| Perfil | Responsabilidades previstas |
+| --- | --- |
 | Administrador | Gerenciar contas, perfis e parâmetros de cálculo por projeto. |
-| Gestor | Calcular PSA, preparar e aprovar contratos, registrar aportes e pagamentos e consultar a gestão financeira. |
+| Gestor | Preparar e aprovar contratos, calcular PSA, registrar recursos e pagamentos e acompanhar a gestão financeira. |
 | Técnico | Cadastrar produtores e propriedades, realizar diagnósticos, calcular PSA e registrar croquis e visitas. |
-| Produtor | Consultar exclusivamente as próprias informações e repasses. |
+| Produtor | Consultar exclusivamente suas informações, contratos e repasses. |
 
-A matriz de permissões detalha as operações e exceções, incluindo correções cadastrais pelo gestor durante a preparação do contrato. O administrador não herda automaticamente as permissões dos demais perfis.
+A matriz de permissões do projeto detalha as operações autorizadas e suas exceções. O administrador não herda automaticamente as atribuições dos demais perfis.
 
-A proposta de autenticação utiliza sessão com cookie `HttpOnly` e `Secure`, proteção CSRF e CORS restrito ao frontend autorizado. A API deve validar o perfil e o acesso aos registros em cada operação.
+A autenticação utiliza:
 
-## 🧮 Cálculo e regras financeiras
+- Sessão HTTP mantida no servidor.
+- Cookie `HttpOnly`, `Secure` em produção e `SameSite=Lax`.
+- Proteção CSRF nas operações que alteram dados.
+- Rotação do identificador da sessão após o login.
+- Senhas armazenadas com hash.
+- Verificação da situação da conta, do perfil e da validade da sessão.
+- Autorização por operação e por vínculo com os dados acessados.
+
+O frontend utilizará caminhos relativos, como `/api/v1`, na mesma origem da aplicação web. Em desenvolvimento, essa comunicação será encaminhada pelo proxy do Angular.
+
+## 🧮 Cálculo do PSA
+
+A fórmula adotada é:
 
 ```text
 Valor anual = (Valor da terra por hectare × Percentual) × Pontuação × Área contratada
 ```
 
-- A área contratada é expressa em hectares, e o percentual deve ser convertido para fração no cálculo.
-- O administrador configura os parâmetros por projeto.
-- Questionário, pesos, escala da pontuação e percentual numérico permanecem sujeitos à definição da equipe e do responsável pelo programa.
-- Valores monetários e demais componentes do cálculo devem utilizar `BigDecimal`, com regras explícitas de precisão e arredondamento.
-- Cada cálculo preserva os parâmetros utilizados. Alterações posteriores não reescrevem automaticamente cálculos e contratos anteriores.
-- A formalização e aprovação do contrato geram o comprometimento do valor anual correspondente.
-- Uma obrigação anual pode receber vários pagamentos parciais. Cada registro permanece vinculado ao contrato, ao produtor e ao projeto.
-- O reenvio da mesma operação não deve duplicar o pagamento.
+Regras consideradas:
 
-Modelo financeiro proposto nos documentos de desenvolvimento:
+- A área contratada é expressa em hectares.
+- O percentual é representado como fração no cálculo: `4%`, por exemplo, corresponde a `0.04`.
+- O serviço inicial trabalha com pontuação normalizada entre `0` e `1`.
+- Valores monetários e demais componentes da fórmula utilizam `BigDecimal`.
+- A área contratada não pode ultrapassar a área total da propriedade.
+- Questionários, pesos e parâmetros devem ser definidos e versionados.
+- Cada memória de cálculo deverá preservar os valores e as versões utilizados.
+- Alterações posteriores de parâmetros não devem modificar automaticamente contratos e cálculos históricos.
+
+A implementação inicial arredonda o resultado final para duas casas decimais com `HALF_UP`. Essa decisão técnica deverá ser confirmada antes da conclusão do fluxo financeiro.
+
+O questionário definitivo, seus pesos e os valores oficiais dos parâmetros não são presumidos pelo código.
+
+## 💰 Gestão financeira simulada
+
+O módulo financeiro deverá registrar os recursos disponíveis, o comprometimento decorrente dos contratos aprovados e os pagamentos simulados.
+
+Uma obrigação anual poderá receber pagamento integral ou vários pagamentos parciais. Cada lançamento deverá permanecer vinculado ao contrato, ao produtor beneficiado e ao projeto de origem.
+
+O acompanhamento financeiro considera:
 
 ```text
 Saldo em caixa = recursos recebidos − pagamentos registrados
-Comprometido pendente = compromissos anuais − pagamentos vinculados
+
+Comprometido pendente = valores reservados ainda não pagos
+
 Saldo disponível = saldo em caixa − comprometido pendente
 ```
 
-## 🚀 Hospedagem e arquivos
+O processamento deverá garantir:
 
-Ambiente definido: **Mini PC Beelink N95, com 8 GB de RAM**, utilizando Docker, Portainer e Cloudflare Tunnel.
+- Reserva do valor correspondente na aprovação do contrato.
+- Validação do saldo e dos limites da obrigação.
+- Atualização consistente de pagamentos e compromissos.
+- Registro de auditoria.
+- Proteção contra pagamentos duplicados por reenvio de requisições.
+- Controle de concorrência nas operações financeiras.
 
-| Serviço | Endereço previsto |
-|---|---|
-| Frontend | https://psagestor.josueschmidt.com.br |
-| Backend | https://psagestor-api.josueschmidt.com.br |
+O MariaDB será a fonte dos dados financeiros. Saldos, reservas e pagamentos não dependerão do Redis.
 
-Esses endereços identificam o destino da publicação e não constituem confirmação de disponibilidade do sistema.
+## 📁 Arquivos e documentos
 
-O frontend será servido como arquivos estáticos pelo Nginx. O backend acessará o MariaDB pela rede privada do ambiente Docker.
+Croquis e documentos contratuais serão armazenados em **bucket privado do Cloudflare R2**.
 
-Contratos e croquis serão armazenados em **bucket privado do Cloudflare R2**, com a chave do objeto (`arquivo_chave`) e o vínculo ao registro salvos no **MariaDB**. O bucket será definido na configuração do backend. Upload e download passarão pela API, que validará o perfil e a permissão sobre cada arquivo. Credenciais R2 ficarão somente no backend; URLs temporárias não serão usadas como referências persistentes no banco.
+O MariaDB manterá os metadados, a chave do objeto e o vínculo com o registro correspondente. As credenciais do armazenamento ficarão exclusivamente no backend.
 
-A API acessará o R2 por sua interface compatível com S3. O envio do objeto deverá ser confirmado antes de registrar o arquivo como disponível; falhas entre R2 e banco exigirão tratamento de objetos órfãos. Documentos de contratos aprovados serão preservados. O Cloudflare Tunnel continuará responsável pelo acesso web ao sistema.
+O fluxo previsto inclui:
 
-Credenciais e tokens devem ficar fora do repositório. O planejamento de backup contempla o MariaDB e uma cópia independente dos objetos R2, preservando as chaves para recuperação conjunta. O volume persistente do MariaDB permanece necessário; os anexos não dependem de um volume persistente no backend.
+- Upload e download controlados pela API.
+- Validação de perfil e permissão sobre o documento.
+- Validação de tamanho e tipo de arquivo.
+- Preservação dos documentos de contratos aprovados.
+- Tratamento de falhas entre o armazenamento no R2 e a persistência no banco.
+- Identificação e compensação de objetos órfãos.
 
-## 📚 Documentação por módulo
+A integração utiliza a interface compatível com S3 do Cloudflare R2. URLs temporárias não serão utilizadas como referências permanentes no banco.
 
-Os guias abaixo devem acompanhar a implementação de cada módulo:
+## ⚡ Cache
 
-- **API — `api/README.md`:** configuração local, autenticação, endpoints, exemplos, Swagger UI e execução dos testes.
-- **Frontend — `front/README.md`:** configuração local, telas, rotas, integração e build.
-- **Infraestrutura — `vps/README.md`:** containers, rede, variáveis de ambiente, volumes, publicação e recuperação de backup.
+O Redis está previsto como recurso opcional para indicadores não financeiros, como contagens e áreas agregadas.
 
-A referência funcional é a **Especificação de Requisitos PSA Gestor, versão 2.1, de 25/09/2026**, complementada pelos documentos revisados de banco de dados, contrato da API, fluxos e regras, execução, permissões e modelo preliminar de contrato.
+A estratégia definida contempla:
 
-As propostas técnicas e decisões pendentes estão identificadas nesses documentos e devem ser validadas antes da implementação dos fluxos correspondentes.
+- Tempo de expiração de 60 segundos.
+- Timeout de 200 milissegundos.
+- Consulta ao banco quando o cache estiver indisponível.
 
-## 🚦 Status e próximos passos
+Permissões, sessões, documentos, saldos e pagamentos não serão armazenados nesse cache.
 
-O projeto está em desenvolvimento acadêmico. Este README descreve o escopo e as decisões de arquitetura; a conclusão de funcionalidades deve ser acompanhada pelas tarefas, testes e entregas do repositório.
+Na estrutura inicial, o cache permanece desativado; a integração efetiva com Redis ainda será implementada.
 
-Sequência de implementação recomendada:
+## 🚀 Infraestrutura
 
-1. Preparar o projeto, o banco de desenvolvimento e a execução local da equipe.
-2. Entregar login por perfil, cadastro de produtor e propriedade e consultas integradas.
-3. Implementar diagnóstico, parâmetros por projeto e cálculo.
-4. Implementar contratos, aportes, pagamentos parciais e consultas financeiras.
-5. Concluir relatórios, testes, documentação e publicação do protótipo.
+A hospedagem prevista é uma **VPS da Loophost, em Taquara/RS**, com:
 
-Permanecem pendentes as definições do questionário e dos pesos, as condições finais de vigência e renovação, as regras de correção após aprovação e a eventual exigência de vistoria para liberação de pagamentos. Dados fictícios de teste devem ser identificados como tal.
+- **2 vCPU**
+- **2 GB de RAM**
+- **70 GB de armazenamento**
+- **IP público fixo**
+
+A VPS executará backend, frontend, MariaDB, Redis e Nginx Proxy Manager em contêineres Docker. O armazenamento dos arquivos permanecerá no Cloudflare R2.
+
+| Finalidade | Endereço previsto |
+| --- | --- |
+| Aplicação web | `https://psagestor.duckdns.org` |
+| Acesso técnico à API | `https://api-psagestor.duckdns.org` |
+
+O navegador acessará a API por `/api/v1` no domínio do frontend, com encaminhamento pelo Nginx Proxy Manager.
+
+Esses endereços representam o planejamento de publicação; não indicam que o sistema já esteja disponível.
+
+MariaDB e Redis deverão permanecer em rede privada. O planejamento de operação inclui persistência dos dados, configurações externas ao código, backups e testes de restauração.
+
+## 🧪 Desenvolvimento e testes
+
+O ambiente de desenvolvimento do backend utiliza:
+
+- JDK 25.
+- Visual Studio Code.
+- Git.
+- DBeaver para administração e consulta do banco.
+- Postman para testes das requisições.
+- Maven Wrapper incluído no projeto.
+
+A API pode ser executada localmente no Windows, conectando-se a um banco MariaDB de desenvolvimento por acesso privado, como túnel SSH.
+
+Os testes automatizados locais utilizam H2 em memória e não dependem da VPS. A validação em H2 não substitui os testes das migrações, dos tipos e da concorrência no MariaDB.
+
+As instruções de configuração, execução e testes devem ser mantidas no README do backend.
+
+## 📚 Documentação
+
+O desenvolvimento é orientado pelos seguintes artefatos:
+
+- Documento de Visão.
+- Especificação de Requisitos, casos de uso e user stories.
+- Documento de Arquitetura e Diagramas UML.
+- Modelo do Banco de Dados.
+- Contrato da API.
+- Fluxos e Regras Principais.
+- Guia de Execução.
+- Matriz de Permissões dos Perfis.
+- Modelo Preliminar de Contrato.
+- Plano e casos de teste, a serem atualizados conforme a implementação.
+
+Os guias de cada módulo complementam esses documentos:
+
+| Guia | Conteúdo |
+| --- | --- |
+| `api/README.md` | Configuração local, autenticação, endpoints e testes. |
+| `front/README.md` | Execução, telas, rotas e integração com a API. |
+| `vps/README.md` | Contêineres, rede, publicação, persistência e recuperação de backups. |
+
+## 🚦 Estado do desenvolvimento
+
+A estrutura inicial do backend foi criada e validada com compilação, geração do pacote executável e **12 testes automatizados aprovados** na validação inicial.
+
+### Implementado na base inicial
+
+- Organização dos módulos de negócio.
+- Login e logout por sessão.
+- Consulta da própria conta.
+- Alteração da própria senha.
+- Proteção CSRF e invalidação de sessões.
+- Provisionamento opcional do administrador inicial.
+- Migração inicial das tabelas de usuário e produtor.
+- Serviço de cálculo do valor anual do PSA.
+- Tratamento padronizado de erros.
+- Coleção inicial do Postman.
+- Maven Wrapper, configuração do VS Code e Dockerfile da API.
+
+### Próximas etapas
+
+1. Implementar a administração de usuários e os cadastros.
+2. Desenvolver parâmetros, questionários e diagnósticos.
+3. Persistir a memória de cálculo e integrar o fluxo contratual.
+4. Implementar arquivos no R2 e geração de documentos.
+5. Desenvolver reservas, aportes e pagamentos simulados.
+6. Integrar o frontend e as consultas por perfil.
+7. Implementar o cache dos indicadores permitidos.
+8. Validar a aplicação no MariaDB e no ambiente Docker.
+9. Concluir os testes, a documentação e a publicação do protótipo.
+
+A estrutura inicial ainda não representa o MVP completo. As integrações com R2 e Redis, os fluxos financeiros, a geração de documentos e a publicação na VPS permanecem em desenvolvimento.
 
 ---
 
