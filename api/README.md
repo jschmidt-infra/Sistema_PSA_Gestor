@@ -16,7 +16,7 @@ Backend do PSA Gestor em Java 25 e Spring Boot 4.1.1, com autenticação por ses
 - Conferência do saldo (UC08), com indicação de consolidação incompleta e identificação dos registros financeiros inconsistentes.
 - Auditoria transacional, tratamento de erros, adaptador Cloudflare R2 e cache Redis opcional de indicadores não financeiros.
 - Métricas protegidas para administradores, logs com identificador de requisição e sinalização de degradação/recuperação do Redis; veja [Observabilidade](docs/OBSERVABILIDADE.md).
-- Migrações Flyway V1–V6, testes de integração e Swagger habilitado no ambiente local para administradores.
+- Migrações Flyway V1–V7, testes de integração e Swagger habilitado no ambiente local para administradores.
 
 **Limites atuais:** o questionário oficial, os pesos, a metodologia de pontuação e o texto definitivo do contrato ainda dependem das definições do grupo/programa. Existe uma metodologia explicitamente demonstrativa, restrita aos perfis de execução `demonstracao` e `test`. Não há renovação automática de exercícios, transferência bancária ou assinatura digital. As operações do adaptador foram testadas no bucket R2 real; a integração completa pela VPS/Angular e o MariaDB da VPS ainda precisam de homologação.
 
@@ -59,7 +59,7 @@ O produtor é identificado pela sessão, não por um identificador escolhido no 
 | Spring Boot | 4.1.1 |
 | Maven Wrapper | 3.9.11 |
 | Spring Security | Versão gerenciada pelo Spring Boot |
-| Persistência | Spring Data JPA/Hibernate, com 20 entidades e repositórios por entidade; consultas específicas para relatórios e conferência |
+| Persistência | Spring Data JPA/Hibernate, com 21 entidades e repositórios por entidade; consultas específicas para relatórios e conferência |
 | Banco local | MariaDB 13.0.2; container separado e descartável nos testes |
 | Banco previsto na VPS | MariaDB 13.0.2 |
 | Migrações | Flyway; Hibernate em `validate` |
