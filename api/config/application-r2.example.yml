@@ -1,0 +1,9 @@
+# Copie para config/application-r2-local.yml (ignorado pelo Git).
+# Execute com os perfis local,demonstracao,r2,r2-local para usar MariaDB e R2 real.
+# Não preencha credenciais neste arquivo de exemplo versionado.
+app:
+  r2:
+    endpoint: https://SEU_ACCOUNT_ID.r2.cloudflarestorage.com
+    bucket: psa-gestor-arquivos
+    access-key: PREENCHER_NO_ARQUIVO_LOCAL
+    secret-key: PREENCHER_NO_ARQUIVO_LOCAL

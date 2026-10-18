@@ -1,0 +1,11 @@
+server:
+  forward-headers-strategy: native
+  tomcat:
+    remoteip:
+      internal-proxies: ${TRUSTED_PROXY_REGEX:^$}
+  servlet:
+    session:
+      cookie:
+        secure: true
+# TRUSTED_PROXY_REGEX deve corresponder somente ao proxy/rede confiável da implantação.
+# A porta 8080 deve permanecer privada; Nginx Proxy Manager termina HTTPS.

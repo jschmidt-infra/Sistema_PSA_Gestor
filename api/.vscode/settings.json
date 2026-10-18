@@ -1,0 +1,9 @@
+{
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.import.exclusions": ["**/tmp/**", "**/output/**"],
+  "files.encoding": "utf8",
+  "files.exclude": {
+    "**/target": true
+  },
+  "java.compile.nullAnalysis.mode": "automatic"
+}

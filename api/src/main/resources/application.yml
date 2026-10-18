@@ -1,0 +1,105 @@
+# O resumo de conexões do Hibernate pode incluir a senha na URL do driver.
+logging:
+  pattern:
+    level: "%5p [requisicaoId=%X{requisicaoId:-sem-requisicao}]"
+  level:
+    org.hibernate.orm.connections.pooling: WARN
+spring:
+  application:
+    name: psa-gestor-api
+  transaction:
+    default-timeout: 60s
+  data:
+    redis:
+      repositories:
+        enabled: false
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 200ms
+      connect-timeout: 200ms
+  datasource:
+    url: ${DB_URL:jdbc:mariadb://mariadb:3306/psa_gestor}
+    username: ${DB_USERNAME:psa_app}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 5000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: ${DB_MIGRATIONS_ENABLED:false}
+    locations: classpath:db/migration
+    clean-disabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: none
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        name: PSA_SESSION
+        path: /
+        http-only: true
+        secure: true
+        same-site: lax
+  tomcat:
+    threads:
+      max: 20
+      min-spare: 2
+    accept-count: 50
+  error:
+    include-message: never
+    include-stacktrace: never
+management:
+  health:
+    redis:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: ADMINISTRADOR
+      status:
+        order: down,out-of-service,unknown,degraded,up
+        http-mapping:
+          down: 503
+          out-of-service: 503
+          degraded: 200
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db
+        liveness:
+          include: livenessState
+app:
+  cache:
+    enabled: ${CACHE_ENABLED:false}
+  r2:
+    endpoint: ${R2_ENDPOINT:}
+    bucket: ${R2_BUCKET:}
+    access-key: ${R2_ACCESS_KEY:}
+    secret-key: ${R2_SECRET_KEY:}
+  bootstrap:
+    enabled: ${BOOTSTRAP_ADMIN_ENABLED:false}
+    nome: ${BOOTSTRAP_ADMIN_NAME:}
+    email: ${BOOTSTRAP_ADMIN_EMAIL:}
+    senha: ${BOOTSTRAP_ADMIN_PASSWORD:}
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

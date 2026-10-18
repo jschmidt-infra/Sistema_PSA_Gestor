@@ -1,0 +1,14 @@
+# Copie para application-local.yml (ignorado pelo Git). API no Windows; MariaDB publicado na porta 3306.
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/psa_gestor
+    username: psa_app
+    password: SUBSTITUA_PELA_SENHA_DO_USUARIO
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: SUBSTITUA_PELA_SENHA_DO_REDIS
+app:
+  cache:
+    enabled: true

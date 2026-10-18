@@ -1,0 +1,368 @@
+[
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/usuarios",
+    "perfis": "A",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/usuarios",
+    "perfis": "A",
+    "corpo": "usuario"
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/usuarios/{id}",
+    "perfis": "A",
+    "corpo": "usuario"
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/usuarios/{id}/senha",
+    "perfis": "A",
+    "corpo": "senha"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/usuarios/{id}/bloqueio-login",
+    "perfis": "A",
+    "corpo": ""
+  },
+  {
+    "metodo": "DELETE",
+    "rota": "/api/v1/usuarios/{id}/bloqueio-login",
+    "perfis": "A",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/produtores",
+    "perfis": "GT",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/produtores",
+    "perfis": "T",
+    "corpo": "produtor"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/produtores/{id}",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/produtores/{id}",
+    "perfis": "GT",
+    "corpo": "produtor"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/propriedades",
+    "perfis": "GT",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/propriedades",
+    "perfis": "T",
+    "corpo": "propriedade"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/propriedades/{id}",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/propriedades/{id}",
+    "perfis": "GT",
+    "corpo": "propriedade"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/propriedades/{id}/fontes-hidricas",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/propriedades/{id}/fontes-hidricas",
+    "perfis": "T",
+    "corpo": "fonte"
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/fontes-hidricas/{id}",
+    "perfis": "T",
+    "corpo": "fonte"
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/propriedades/{id}/levantamento-hidrico",
+    "perfis": "T",
+    "corpo": "levantamento"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/propriedades/{id}/visitas",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/propriedades/{id}/visitas",
+    "perfis": "T",
+    "corpo": "visita"
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/visitas/{id}",
+    "perfis": "T",
+    "corpo": "visita"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/localidades",
+    "perfis": "AGT",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/sub-bacias",
+    "perfis": "AGT",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/projetos",
+    "perfis": "AGT",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/projetos/{id}/parametros",
+    "perfis": "AGT",
+    "corpo": ""
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/projetos/{id}/parametros",
+    "perfis": "A",
+    "corpo": "parametros"
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/propriedades/{id}/diagnosticos",
+    "perfis": "T",
+    "corpo": "diagnostico"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/propriedades/{id}/diagnosticos",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/diagnosticos/{id}",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/diagnosticos/{id}/questionario",
+    "perfis": "GT",
+    "corpo": ""
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/diagnosticos/{id}/respostas",
+    "perfis": "T",
+    "corpo": "respostas"
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/diagnosticos/{id}/concluir",
+    "perfis": "T",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/diagnosticos/{id}/reapurar",
+    "perfis": "T",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/diagnosticos/{id}/abrir-correcao",
+    "perfis": "T",
+    "corpo": "correcao"
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/calculos",
+    "perfis": "GT",
+    "corpo": "calculo"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/calculos/{id}",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/propriedades/{id}/croquis",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/propriedades/{id}/croquis",
+    "perfis": "T",
+    "corpo": "arquivo"
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/croquis/{id}",
+    "perfis": "T",
+    "corpo": "arquivo"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/croquis/{id}/arquivo",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/contratos",
+    "perfis": "GT",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/contratos",
+    "perfis": "G",
+    "corpo": "contrato"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/contratos/{id}",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/contratos/{id}",
+    "perfis": "G",
+    "corpo": "contrato"
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/contratos/{id}/gerar-documento",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/contratos/{id}/assinatura-simulada",
+    "perfis": "G",
+    "corpo": "assinatura"
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/contratos/{id}/aprovar",
+    "perfis": "G",
+    "corpo": "aprovacao"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/contratos/{id}/documento",
+    "perfis": "GTP",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/contratos/{id}/compromissos",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/projetos/{id}/aportes",
+    "perfis": "G",
+    "corpo": "aporte"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/projetos/{id}/aportes",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/financeiro/saldo",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "POST",
+    "rota": "/api/v1/pagamentos",
+    "perfis": "G",
+    "corpo": "pagamento"
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/pagamentos/{id}",
+    "perfis": "GP",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/pagamentos",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/relatorios/aplicacao-recursos",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/indicadores",
+    "perfis": "G",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/meu-historico",
+    "perfis": "P",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/meu-historico/pagamentos",
+    "perfis": "P",
+    "corpo": ""
+  },
+  {
+    "metodo": "GET",
+    "rota": "/api/v1/configuracoes/vencimento-contratos",
+    "perfis": "A",
+    "corpo": ""
+  },
+  {
+    "metodo": "PUT",
+    "rota": "/api/v1/configuracoes/vencimento-contratos",
+    "perfis": "A",
+    "corpo": "vencimento"
+  }
+]

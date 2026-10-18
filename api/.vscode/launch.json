@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "PSA Gestor — MariaDB local e R2",
+      "request": "launch",
+      "mainClass": "br.unisc.psagestor.PsaGestorApplication",
+      "projectName": "psa-gestor-api",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "local,demonstracao,r2,r2-local",
+        "BOOTSTRAP_ADMIN_ENABLED": "false"
+      },
+      "vmArgs": "-Dfile.encoding=UTF-8 -Duser.timezone=UTC"
+    }
+  ]
+}

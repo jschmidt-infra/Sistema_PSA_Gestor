@@ -1,0 +1,277 @@
+[
+  {
+    "id": "RF01",
+    "origem": "UC01; RN01",
+    "criterio": "Cadastrar produtor/propriedade e editar dados vinculados.",
+    "testes": [
+      "FluxoPsaIntegrationTest#consultasJpaPreservamPaginacaoFiltrosEEdicaoDosCadastros",
+      "FluxoPsaIntegrationTest#negaAcessoPorPerfilEPorPropriedade"
+    ],
+    "pendencia": "Validar todos os campos e mensagens pela interface final."
+  },
+  {
+    "id": "RF02",
+    "origem": "UC02",
+    "criterio": "Registrar fontes e rejeitar situação hídrica incoerente.",
+    "testes": [
+      "FluxoPsaIntegrationTest#consultasJpaPreservamPaginacaoFiltrosEEdicaoDosCadastros",
+      "FluxoPsaIntegrationTest#rejeitaArquivoFalsoESituacaoHidricaIncoerente"
+    ],
+    "pendencia": ""
+  },
+  {
+    "id": "RF03",
+    "origem": "UC03; RN01",
+    "criterio": "Apresentar grupos da versão vinculada, salvar respostas e exigir obrigatórias.",
+    "testes": [
+      "FluxoPsaIntegrationTest#gruposPreservamOrdemVersaoRespostasEPontuacao",
+      "FluxoPsaIntegrationTest#rejeitaGruposInvalidosPerguntasDuplicadasEPesosIncorretos",
+      "FluxoPsaIntegrationTest#questionarioHistoricoSemGruposContinuaLegivelSemReescreverVersao",
+      "FluxoPsaIntegrationTest#produtorSoConsultaSeusRecursosMesmoAlterandoIdsEFiltros"
+    ],
+    "pendencia": "Conteúdo oficial do questionário e uso em campo pela interface."
+  },
+  {
+    "id": "RF04",
+    "origem": "UC04; RN02",
+    "criterio": "Apurar respostas e preservar revisões anteriores.",
+    "testes": [
+      "FluxoPsaIntegrationTest#gruposPreservamOrdemVersaoRespostasEPontuacao",
+      "FluxoPsaIntegrationTest#exigeDiagnosticoCompletoEPreservaCalculoAnterior"
+    ],
+    "pendencia": "Metodologia oficial e apuração em prod; testes atuais usam demonstração."
+  },
+  {
+    "id": "RF05",
+    "origem": "UC05; RN03/RN05",
+    "criterio": "Aplicar fórmula anual e arredondamento; rejeitar área excedente.",
+    "testes": [
+      "calculo.service.CalculadoraPsaTest#aplicaFormulaDocumentadaComDadosFicticios",
+      "calculo.service.CalculadoraPsaTest#arredondaSomenteOResultadoFinal",
+      "calculo.service.CalculadoraPsaTest#rejeitaAreaAcimaDaPropriedade",
+      "calculo.service.CalculadoraPsaTest#naoAceitaPercentualInteiroComoSeFosseFracao",
+      "FluxoPsaIntegrationTest#exigeDiagnosticoCompletoEPreservaCalculoAnterior",
+      "FluxoPsaIntegrationTest#produtorSoConsultaSeusRecursosMesmoAlterandoIdsEFiltros"
+    ],
+    "pendencia": "Revalidar fluxo com pontuação oficial em prod."
+  },
+  {
+    "id": "RF06",
+    "origem": "US01; CA01/CA02; RN04/RN05",
+    "criterio": "Administrador configura valores sem alterar cálculos históricos.",
+    "testes": [
+      "FluxoPsaIntegrationTest#parametrosPendentesNaoInventamPontuacaoEPermitemEditarValorDaTerra",
+      "FluxoPsaIntegrationTest#gruposPreservamOrdemVersaoRespostasEPontuacao",
+      "FluxoPsaIntegrationTest#exigeDiagnosticoCompletoEPreservaCalculoAnterior",
+      "FluxoPsaIntegrationTest#rejeitaGruposInvalidosPerguntasDuplicadasEPesosIncorretos"
+    ],
+    "pendencia": "Perguntas e pesos oficiais."
+  },
+  {
+    "id": "RF07",
+    "origem": "US02; RN06",
+    "criterio": "Croqui da propriedade vinculado ao contrato; rejeitar falso arquivo.",
+    "testes": [
+      "FluxoPsaIntegrationTest#rejeitaArquivoFalsoESituacaoHidricaIncoerente",
+      "FluxoPsaIntegrationTest#limpezaPreservaArquivoReferenciadoEEdicaoDeCroquiAprovadoEhBloqueada"
+    ],
+    "pendencia": "Validação visual da delimitação e integração final com R2."
+  },
+  {
+    "id": "RF08",
+    "origem": "UC06; RN07",
+    "criterio": "Gerar documento e impedir aprovação de versão desatualizada.",
+    "testes": [
+      "FluxoPsaIntegrationTest#impedeAprovacaoSemSaldoESnapshotDesatualizado",
+      "FluxoPsaIntegrationTest#fluxoCompletoReservaPagamentoParcialRetryEExtrato"
+    ],
+    "pendencia": "Revisão visual do PDF e aprovação do texto contratual definitivo."
+  },
+  {
+    "id": "RF09",
+    "origem": "US03",
+    "criterio": "Assinatura simulada exige documento, perfil autorizado e registro único.",
+    "testes": [
+      "FluxoPsaIntegrationTest#assinaturaSimuladaExigeDocumentoImpedeDuplicidadeERestringePerfil"
+    ],
+    "pendencia": "Validar apresentação do registro como simulação no frontend."
+  },
+  {
+    "id": "RF10",
+    "origem": "UC07; RN10",
+    "criterio": "Registrar pagamentos parciais, idempotência e reserva concorrente.",
+    "testes": [
+      "FluxoPsaIntegrationTest#fluxoCompletoReservaPagamentoParcialRetryEExtrato",
+      "FluxoPsaIntegrationTest#pagamentosConcorrentesComMesmaChaveGeramUmLancamento",
+      "FluxoPsaIntegrationTest#aprovacoesConcorrentesNaoReservamMaisQueOSaldo"
+    ],
+    "pendencia": ""
+  },
+  {
+    "id": "RF11",
+    "origem": "UC08; RN11",
+    "criterio": "Exibir saldos e identificar registros inconsistentes.",
+    "testes": [
+      "FluxoPsaIntegrationTest#saldoSemMovimentosEhCompletoEZerado",
+      "FluxoPsaIntegrationTest#saldoIdentificaTodosOsPagamentosAcimaDoCompromissoSemAlterarDados",
+      "FluxoPsaIntegrationTest#saldoGlobalNaoOcultaDeficitDeProjetoEFiltraOcorrencias",
+      "FluxoPsaIntegrationTest#saldoGlobalIdentificaPagamentoOrfaoMesmoQuandoAgregadoNaoConsegueIncluiLo",
+      "FluxoPsaIntegrationTest#saldoIdentificaReservaAusenteValorExercicioEContratoNaoAprovado",
+      "FluxoPsaIntegrationTest#saldoIdentificaOrigemAusenteSaldoInicialDuplicadoEVinculoDivergente"
+    ],
+    "pendencia": ""
+  },
+  {
+    "id": "RF12",
+    "origem": "US04",
+    "criterio": "Relatório filtrado com total e dados rastreáveis.",
+    "testes": [
+      "FluxoPsaIntegrationTest#projecoesJpaPreservamTotaisFiltrosEDatasDoContrato",
+      "FluxoPsaIntegrationTest#relatoriosFiltramPeriodoProjetoSubBaciaCombinacoesEPaginacaoSemAlterarTotais",
+      "FluxoPsaIntegrationTest#relatorioSemPagamentosRetornaListaVaziaETotalZero"
+    ],
+    "pendencia": "Conferir apresentação dos relatórios no frontend e no ambiente publicado; filtros e totais da API cobertos."
+  },
+  {
+    "id": "RF13",
+    "origem": "US05",
+    "criterio": "Apresentar indicadores coerentes com pagamentos e produtores.",
+    "testes": [
+      "FluxoPsaIntegrationTest#projecoesJpaPreservamTotaisFiltrosEDatasDoContrato"
+    ],
+    "pendencia": "Validar todos os indicadores previstos e painel final."
+  },
+  {
+    "id": "RF14",
+    "origem": "US06",
+    "criterio": "Validar vigência, configurar antecedência administrativa e sinalizar/filtrar vencidos, vencendo hoje e próximos do vencimento, preservando titularidade.",
+    "testes": [
+      "FluxoPsaIntegrationTest#vigenciaRejeitaFimAnteriorEAceitaMesmoDia",
+      "FluxoPsaIntegrationTest#filtroVencimentoIncluiLimiteEVencidosMasExcluiDatasPosteriores",
+      "FluxoPsaIntegrationTest#administradorConfiguraAntecedenciaPersistidaComValidacaoEAuditoria",
+      "FluxoPsaIntegrationTest#alertasFiltramAprovadosComLimitesPaginacaoEAtualizacaoImediata",
+      "contratos.service.VencimentoServiceTest#usaDiaDeSaoPauloMesmoQuandoUtcJaMudou"
+    ],
+    "pendencia": "Validar etiquetas e configuração pela interface Angular. Renovação permanece indefinida; alertas não renovam contratos."
+  },
+  {
+    "id": "RF15",
+    "origem": "UC09; RN12",
+    "criterio": "Autenticar por sessão/CSRF, restringir perfis e limitar tentativas.",
+    "testes": [
+      "acesso.AuthIntegrationTest#autenticaComCsrfERenovaSessaoSemExporSenha",
+      "acesso.AuthIntegrationTest#bloqueiaLoginSemCsrfEConsultaAnonima",
+      "acesso.AuthIntegrationTest#cincoFalhasBloqueiamPorUmaHoraSemProrrogarEAposExpirarPermiteLogin",
+      "acesso.AuthIntegrationTest#administradorConsultaEDesbloqueiaComCsrfEAuditoriaSemReativarConta",
+      "acesso.AuthIntegrationTest#tentativasConcorrentesNaoUltrapassamCincoEEmailsSaoIndependentes",
+      "acesso.AuthIntegrationTest#desativacaoInvalidaSessaoExistente",
+      "acesso.AuthIntegrationTest#mudancaDePerfilInvalidaSessaoExistente",
+      "FluxoPsaIntegrationTest#matrizDeTodasAsRotasValidaPerfisERecusaAnonimos",
+      "FluxoPsaIntegrationTest#rotasDeAutenticacaoDocumentacaoEMetricasRespeitamPerfis"
+    ],
+    "pendencia": "Executar login/cookies/CSRF através de HTTPS e proxy na VPS."
+  },
+  {
+    "id": "RF16",
+    "origem": "US07; RN12",
+    "criterio": "Produtor consulta somente seus pagamentos e documentos.",
+    "testes": [
+      "FluxoPsaIntegrationTest#naoExpoePagamentosNemArquivosDeOutroProdutor",
+      "FluxoPsaIntegrationTest#fluxoCompletoReservaPagamentoParcialRetryEExtrato",
+      "FluxoPsaIntegrationTest#produtorSoConsultaSeusRecursosMesmoAlterandoIdsEFiltros"
+    ],
+    "pendencia": ""
+  },
+  {
+    "id": "RF17",
+    "origem": "US08",
+    "criterio": "Registrar e editar observações de visitas vinculadas.",
+    "testes": [
+      "FluxoPsaIntegrationTest#consultasJpaPreservamPaginacaoFiltrosEEdicaoDosCadastros"
+    ],
+    "pendencia": "Validar fluxo móvel final."
+  },
+  {
+    "id": "RF18",
+    "origem": "UC10; RN08/RN09",
+    "criterio": "Aportes simulados alimentam saldo e têm origem identificada.",
+    "testes": [
+      "FluxoPsaIntegrationTest#fluxoCompletoReservaPagamentoParcialRetryEExtrato",
+      "FluxoPsaIntegrationTest#saldoIdentificaOrigemAusenteSaldoInicialDuplicadoEVinculoDivergente"
+    ],
+    "pendencia": ""
+  },
+  {
+    "id": "RNF-DESEMPENHO",
+    "origem": "Especificação, seção 6",
+    "criterio": "Apuração e valor devido apresentados ao usuário em até 5 segundos.",
+    "testes": [
+      "FluxoPsaIntegrationTest#medeApuracaoECalculoLocalComCemPerguntas"
+    ],
+    "pendencia": "Medição local preliminar não inclui navegador/rede/proxy/VPS; repetir fluxo real com metodologia aprovada. Não foi definido SLA de concorrência ou percentil."
+  },
+  {
+    "id": "RNF-SEGURANCA",
+    "origem": "Especificação, seção 6; RN12",
+    "criterio": "Restringir dados por perfil e titular.",
+    "testes": [
+      "FluxoPsaIntegrationTest#negaAcessoPorPerfilEPorPropriedade",
+      "FluxoPsaIntegrationTest#naoExpoePagamentosNemArquivosDeOutroProdutor",
+      "acesso.AuthIntegrationTest#bloqueiaLoginSemCsrfEConsultaAnonima",
+      "FluxoPsaIntegrationTest#matrizDeTodasAsRotasValidaPerfisERecusaAnonimos",
+      "FluxoPsaIntegrationTest#rotasDeAutenticacaoDocumentacaoEMetricasRespeitamPerfis",
+      "FluxoPsaIntegrationTest#produtorSoConsultaSeusRecursosMesmoAlterandoIdsEFiltros"
+    ],
+    "pendencia": "Configuração HTTPS, cookies e rede da VPS."
+  },
+  {
+    "id": "RNF-USABILIDADE",
+    "origem": "Especificação, seção 6",
+    "criterio": "Interface simples e responsiva para celular e desktop.",
+    "testes": [],
+    "pendencia": "Aceitação manual com frontend e usuários; não comprovável por testes da API."
+  },
+  {
+    "id": "RNF-RASTREABILIDADE",
+    "origem": "Especificação, seção 6; RN05/RN10",
+    "criterio": "Preservar origem/projeto/produtor e eventos de acesso.",
+    "testes": [
+      "FluxoPsaIntegrationTest#fluxoCompletoReservaPagamentoParcialRetryEExtrato",
+      "FluxoPsaIntegrationTest#exigeDiagnosticoCompletoEPreservaCalculoAnterior",
+      "acesso.AuthIntegrationTest#auditaLoginRecusasBloqueioLogoutSemCredenciais"
+    ],
+    "pendencia": "Revisar evidências de auditoria do fluxo publicado."
+  },
+  {
+    "id": "RNF-PRIVACIDADE",
+    "origem": "Especificação, seção 6",
+    "criterio": "Isolar dados e não registrar credenciais nos logs.",
+    "testes": [
+      "FluxoPsaIntegrationTest#naoExpoePagamentosNemArquivosDeOutroProdutor",
+      "acesso.AuthIntegrationTest#auditaLoginRecusasBloqueioLogoutSemCredenciais",
+      "FluxoPsaIntegrationTest#produtorSoConsultaSeusRecursosMesmoAlterandoIdsEFiltros"
+    ],
+    "pendencia": "Esses testes não certificam conformidade legal; retenção, acesso operacional e tratamento de dados precisam de revisão própria."
+  },
+  {
+    "id": "RNF-MANUTENCAO",
+    "origem": "Especificação, seção 6; arquitetura",
+    "criterio": "Configuração versionada e separação entre camadas.",
+    "testes": [
+      "FluxoPsaIntegrationTest#gruposPreservamOrdemVersaoRespostasEPontuacao",
+      "ArquiteturaCamadasTest#persistenciaDeProducaoNaoUsaRepositorioSqlGenericoNemJdbcDireto",
+      "ArquiteturaCamadasTest#controllersNaoAcessamPersistenciaNemDeclaramTransacoes",
+      "ArquiteturaCamadasTest#servicosERepositoriosNaoDependemDeControllersNemDeRespostasHttp"
+    ],
+    "pendencia": ""
+  },
+  {
+    "id": "ARQ-OBSERVABILIDADE",
+    "origem": "Arquitetura e solicitação de observabilidade",
+    "criterio": "Métricas protegidas, correlação e continuidade sem Redis.",
+    "testes": [
+      "ObservabilidadeIntegrationTest#metricasProtegidasLogsCorrelacionadosERedisNaoDerrubaApi"
+    ],
+    "pendencia": "Verificar queda/retorno real do Redis e rotação de logs no ambiente publicado."
+  }
+]

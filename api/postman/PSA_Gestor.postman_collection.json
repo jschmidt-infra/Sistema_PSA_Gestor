@@ -1,0 +1,823 @@
+{
+  "info": {
+    "name": "PSA Gestor — API e fluxo de demonstração",
+    "description": "Autenticação e requisições manuais por perfil. Troque a conta antes de usar cada pasta. Execute novamente CSRF após login. Leia docs/API.md; senhas devem ficar em variáveis privadas. Não execute a coleção inteira indiscriminadamente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8080"
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "senha",
+      "value": ""
+    },
+    {
+      "key": "csrfHeader",
+      "value": "X-CSRF-TOKEN"
+    },
+    {
+      "key": "csrfToken",
+      "value": ""
+    },
+    {
+      "key": "projetoId",
+      "value": ""
+    },
+    {
+      "key": "localidadeId",
+      "value": ""
+    },
+    {
+      "key": "produtorId",
+      "value": ""
+    },
+    {
+      "key": "propriedadeId",
+      "value": ""
+    },
+    {
+      "key": "diagnosticoId",
+      "value": ""
+    },
+    {
+      "key": "calculoId",
+      "value": ""
+    },
+    {
+      "key": "croquiId",
+      "value": ""
+    },
+    {
+      "key": "contratoId",
+      "value": ""
+    },
+    {
+      "key": "compromissoId",
+      "value": ""
+    },
+    {
+      "key": "dataAtual",
+      "value": ""
+    },
+    {
+      "key": "chaveOperacao",
+      "value": ""
+    },
+    {
+      "key": "usuarioId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1 — Obter CSRF",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/auth/csrf"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('CSRF disponível', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) { const r = pm.response.json(); pm.collectionVariables.set('csrfHeader', r.headerName); pm.collectionVariables.set('csrfToken', r.token); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 — Login",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/v1/auth/login",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "{{csrfHeader}}",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{loginBody}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('loginBody', JSON.stringify({email: pm.variables.get('email'), senha: pm.variables.get('senha')}));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Login aceito', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 — Renovar CSRF após login",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/auth/csrf"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('CSRF renovado', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) { const r = pm.response.json(); pm.collectionVariables.set('csrfHeader', r.headerName); pm.collectionVariables.set('csrfToken', r.token); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 — Minha conta",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/v1/auth/me"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Conta autenticada', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 — Logout",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/v1/auth/logout",
+        "header": [
+          {
+            "key": "{{csrfHeader}}",
+            "value": "{{csrfToken}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Sessão encerrada', () => pm.response.to.have.status(204));",
+              "if (pm.response.code === 204) pm.collectionVariables.unset('csrfToken');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administrador — referências e parâmetros",
+      "item": [
+        {
+          "name": "Consultar projetos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/projetos"
+          }
+        },
+        {
+          "name": "Consultar localidades",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/localidades"
+          }
+        },
+        {
+          "name": "Criar técnico (defina novaSenha em variável privada)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/usuarios",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Técnico de demonstração\",\"email\":\"tecnico@example.test\",\"perfil\":\"TECNICO\",\"ativo\":true,\"senha\":\"{{novaSenha}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Criar gestor (defina novaSenha em variável privada)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/usuarios",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Gestor de demonstração\",\"email\":\"gestor@example.test\",\"perfil\":\"GESTOR\",\"ativo\":true,\"senha\":\"{{novaSenha}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Configurar demonstração (somente sandbox)",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/projetos/{{projetoId}}/parametros",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valorHectare\": \"20000.00\",\n  \"percentual\": \"0.04\",\n  \"metodologia\": \"DEMONSTRACAO_SOMA_PONDERADA\",\n  \"grupos\": [\n    {\n      \"id\": \"conservacao_solo\",\n      \"nome\": \"Conservação do solo\",\n      \"perguntas\": [\n        {\n          \"id\": \"p1\",\n          \"texto\": \"Pergunta demonstrativa\",\n          \"obrigatoria\": true,\n          \"peso\": \"1.000000\",\n          \"alternativas\": [\n            {\n              \"id\": \"a1\",\n              \"texto\": \"Atende\",\n              \"valor\": \"1.000000\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Consultar bloqueio de login",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}/bloqueio-login"
+          }
+        },
+        {
+          "name": "Remover bloqueio de login",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}/bloqueio-login",
+            "description": "Exclusivo do administrador. Zera tentativas e remove bloqueio temporário; não altera senha nem reativa conta."
+          }
+        },
+        {
+          "name": "Consultar antecedência dos avisos de vencimento",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/configuracoes/vencimento-contratos"
+          }
+        },
+        {
+          "name": "Definir antecedência dos avisos de vencimento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"antecedenciaDias\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/v1/configuracoes/vencimento-contratos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Técnico — cadastro e diagnóstico",
+      "item": [
+        {
+          "name": "Cadastrar produtor fictício",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/produtores",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Produtor de demonstração\",\"documento\":\"12345678901\",\"endereco\":\"Endereço de demonstração\",\"telefone\":\"51999999999\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) { const b=pm.response.json(); pm.collectionVariables.set('produtorId', b.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cadastrar propriedade",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/propriedades",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\":\"Propriedade de demonstração\",\"produtorId\":{{produtorId}},\"localidadeId\":{{localidadeId}},\"areaTotal\":\"10.0000\",\"carSituacao\":\"NAO_POSSUI\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) { const b=pm.response.json(); pm.collectionVariables.set('propriedadeId', b.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Declarar ausência de fontes",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/propriedades/{{propriedadeId}}/levantamento-hidrico",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"situacao\":\"AUSENTES\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Criar diagnóstico (informe dataAtual YYYY-MM-DD)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/propriedades/{{propriedadeId}}/diagnosticos",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"projetoId\":{{projetoId}},\"dataVisita\":\"{{dataAtual}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) { const b=pm.response.json(); pm.collectionVariables.set('diagnosticoId', b.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Salvar respostas demonstrativas",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/diagnosticos/{{diagnosticoId}}/respostas",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"respostas\":[{\"perguntaId\":\"p1\",\"alternativaId\":\"a1\"}]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Concluir diagnóstico",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/diagnosticos/{{diagnosticoId}}/concluir",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Calcular",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/calculos",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"diagnosticoId\":{{diagnosticoId}},\"areaContratada\":\"1.0000\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) { const b=pm.response.json(); pm.collectionVariables.set('calculoId', b.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Enviar croqui — selecione um arquivo local",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/propriedades/{{propriedadeId}}/croquis",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "arquivo",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "areaPsa",
+                  "type": "text",
+                  "value": "1.0000"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) { const b=pm.response.json(); pm.collectionVariables.set('croquiId', b.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar questionário por grupos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/diagnosticos/{{diagnosticoId}}/questionario",
+            "description": "Retorna os grupos e perguntas da versão fixada no diagnóstico. Acesso com sessão de técnico ou gestor."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gestor — contrato e financeiro",
+      "item": [
+        {
+          "name": "Registrar saldo inicial (uma única vez)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/projetos/{{projetoId}}/aportes",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tipo\":\"SALDO_INICIAL\",\"dataAporte\":\"{{dataAtual}}\",\"valor\":\"1000.00\",\"descricao\":\"Recursos simulados\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Criar contrato (defina dataFim)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/contratos",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"projetoId\":{{projetoId}},\"calculoId\":{{calculoId}},\"croquiId\":{{croquiId}},\"inicio\":\"{{dataAtual}}\",\"fim\":\"{{dataFim}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) { const b=pm.response.json(); pm.collectionVariables.set('contratoId', b.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Gerar PDF preliminar",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/contratos/{{contratoId}}/gerar-documento",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Baixar contrato",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/contratos/{{contratoId}}/documento"
+          }
+        },
+        {
+          "name": "Aprovar e reservar (exercicio = ano inicial)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/contratos/{{contratoId}}/aprovar",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"exercicio\":{{exercicio}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Consultar compromisso (copie seu id)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/contratos/{{contratoId}}/compromissos"
+          }
+        },
+        {
+          "name": "Pagamento — mantenha a mesma chave em reenvios",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/pagamentos",
+            "header": [
+              {
+                "key": "{{csrfHeader}}",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"compromissoId\":{{compromissoId}},\"projetoId\":{{projetoId}},\"valor\":\"300.00\",\"dataPagamento\":\"{{dataAtual}}\",\"referencia\":\"Repasse simulado\",\"chaveOperacao\":\"{{chaveOperacao}}\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Consultar saldo",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/financeiro/saldo?projetoId={{projetoId}}"
+          }
+        },
+        {
+          "name": "Relatório",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/relatorios/aplicacao-recursos?projetoId={{projetoId}}"
+          }
+        },
+        {
+          "name": "Indicadores",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/indicadores?projetoId={{projetoId}}"
+          }
+        },
+        {
+          "name": "Contratos próximos do vencimento",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/contratos?situacaoVencimento=PROXIMO_DO_VENCIMENTO&page=0&size=20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produtor — consultas restritas",
+      "item": [
+        {
+          "name": "Meus contratos e resultados",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meu-historico"
+          }
+        },
+        {
+          "name": "Meus pagamentos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meu-historico/pagamentos"
+          }
+        },
+        {
+          "name": "Meus contratos vencidos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meu-historico?situacaoVencimento=VENCIDO"
+          }
+        }
+      ]
+    }
+  ]
+}
