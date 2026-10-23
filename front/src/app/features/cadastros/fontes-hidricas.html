@@ -1,0 +1,120 @@
+<div class="cartao">
+  <div class="cartao-cabecalho">
+    <h2>Fontes hídricas</h2>
+    <span
+      class="selo"
+      [class.ok]="situacao() !== 'NAO_AVALIADO'"
+      [class.alerta]="situacao() === 'NAO_AVALIADO'"
+    >
+      {{ nomesSituacao[situacao()] }}
+    </span>
+  </div>
+
+  <app-mensagem-erro [falha]="falha()" />
+
+  @if (situacao() === 'NAO_AVALIADO' && podeEditar()) {
+    <div class="aviso alerta">
+      O levantamento hídrico ainda não foi registrado. Cadastre as fontes encontradas ou registre
+      que a propriedade não possui fontes hídricas.
+    </div>
+  }
+
+  @if (fontes().length === 0) {
+    <p class="vazio">Nenhuma fonte hídrica cadastrada.</p>
+  } @else {
+    <div class="tabela-envoltorio">
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Proteção</th>
+            <th>Situação</th>
+            <th>Observações</th>
+            @if (podeEditar()) {
+              <th><span class="visualmente-oculto">Ações</span></th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (f of fontes(); track f.id) {
+            <tr>
+              <td data-rotulo="Tipo">{{ nomesTipo[f.tipo] }}</td>
+              <td data-rotulo="Proteção">{{ nomesProtecao[f.protecao] }}</td>
+              <td data-rotulo="Situação">
+                <span class="selo" [class.ok]="f.ativo" [class.inativo]="!f.ativo">
+                  {{ f.ativo ? 'Ativa' : 'Inativa' }}
+                </span>
+              </td>
+              <td data-rotulo="Observações">{{ f.observacoes || '—' }}</td>
+              @if (podeEditar()) {
+                <td data-rotulo="">
+                  <button type="button" class="botao secundario pequeno" (click)="editar(f)">
+                    Editar
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (podeEditar()) {
+    @if (emEdicao() !== null) {
+      <form [formGroup]="form" (ngSubmit)="salvar()" class="painel-form" novalidate>
+        <h3>{{ emEdicao() === 0 ? 'Nova fonte hídrica' : 'Editar fonte hídrica' }}</h3>
+        <div class="formulario">
+          <div class="campo">
+            <label for="tipo" class="obrigatorio">Tipo</label>
+            <select id="tipo" formControlName="tipo">
+              @for (t of tipos; track t) {
+                <option [ngValue]="t">{{ nomesTipo[t] }}</option>
+              }
+            </select>
+          </div>
+          <div class="campo">
+            <label for="protecao" class="obrigatorio">Estado de proteção</label>
+            <select id="protecao" formControlName="protecao">
+              @for (p of protecoes; track p) {
+                <option [ngValue]="p">{{ nomesProtecao[p] }}</option>
+              }
+            </select>
+          </div>
+          <div class="campo">
+            <label>
+              <input type="checkbox" formControlName="ativo" />
+              Fonte ativa
+            </label>
+          </div>
+          <div class="campo largo">
+            <label for="observacoesFonte">Observações</label>
+            <textarea
+              id="observacoesFonte"
+              formControlName="observacoes"
+              maxlength="5000"
+            ></textarea>
+          </div>
+        </div>
+        <div class="acoes">
+          <button type="submit" class="botao" [disabled]="salvando()">Salvar fonte</button>
+          <button type="button" class="botao secundario" (click)="cancelar()">Cancelar</button>
+        </div>
+      </form>
+    } @else {
+      <div class="acoes">
+        <button type="button" class="botao secundario" (click)="nova()">Adicionar fonte</button>
+        @if (ativas() === 0 && situacao() !== 'AUSENTES') {
+          <button
+            type="button"
+            class="botao secundario"
+            (click)="registrarAusencia()"
+            [disabled]="salvando()"
+          >
+            Registrar ausência de fontes
+          </button>
+        }
+      </div>
+    }
+  }
+</div>

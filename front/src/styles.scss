@@ -1,0 +1,391 @@
+/* Estilos globais do PSA Gestor: tokens, formulários, tabelas e utilitários. */
+
+:root {
+  --primaria: #2f6b3a;
+  --primaria-escura: #1f4a28;
+  --primaria-clara: #e3f0e5;
+  --sobre-primaria: #ffffff;
+  --fundo: #f4f6f3;
+  --superficie: #ffffff;
+  --texto: #1d2420;
+  --texto-suave: #5c6a61;
+  --borda: #d6ddd7;
+  --perigo: #b42318;
+  --perigo-fundo: #fdecea;
+  --aviso: #8a5a00;
+  --aviso-fundo: #fff4d6;
+  --sucesso: #1e6b34;
+  --sucesso-fundo: #e5f4e9;
+  --info-fundo: #e8f0fb;
+  --raio: 6px;
+  --altura-topo: 3.5rem;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--fundo);
+}
+
+a {
+  color: var(--primaria);
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.25rem;
+}
+h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.75rem;
+}
+
+:focus-visible {
+  outline: 3px solid #f2b705;
+  outline-offset: 2px;
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Cabeçalho de página */
+.cabecalho-pagina {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+
+  p {
+    margin: 0;
+    color: var(--texto-suave);
+  }
+}
+
+.migalhas {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  a {
+    text-decoration: none;
+  }
+}
+
+/* Cartões */
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 1.25rem;
+  & + .cartao {
+    margin-top: 1rem;
+  }
+}
+
+.cartao-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  h2 {
+    margin: 0;
+  }
+}
+
+/* Botões */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primaria);
+  border-radius: var(--raio);
+  background: var(--primaria);
+  color: var(--sobre-primaria);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--primaria-escura);
+  }
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  &.secundario {
+    background: var(--superficie);
+    color: var(--primaria);
+    &:hover:not(:disabled) {
+      background: var(--primaria-clara);
+    }
+  }
+  &.perigo {
+    background: var(--perigo);
+    border-color: var(--perigo);
+  }
+  &.pequeno {
+    min-height: 2rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Formulários */
+.formulario {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  &.largo {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--superficie);
+    font: inherit;
+    color: inherit;
+  }
+
+  textarea {
+    min-height: 6rem;
+    resize: vertical;
+  }
+
+  input.ng-invalid.ng-touched,
+  select.ng-invalid.ng-touched,
+  textarea.ng-invalid.ng-touched {
+    border-color: var(--perigo);
+  }
+
+  .ajuda {
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+  }
+
+  .erro-campo {
+    font-size: 0.8rem;
+    color: var(--perigo);
+  }
+}
+
+.obrigatorio::after {
+  content: ' *';
+  color: var(--perigo);
+}
+
+/* Avisos */
+.aviso {
+  padding: 0.75rem 1rem;
+  border-radius: var(--raio);
+  border-left: 4px solid;
+  margin-bottom: 1rem;
+
+  &.erro {
+    background: var(--perigo-fundo);
+    border-color: var(--perigo);
+  }
+  &.alerta {
+    background: var(--aviso-fundo);
+    border-color: var(--aviso);
+  }
+  &.sucesso {
+    background: var(--sucesso-fundo);
+    border-color: var(--sucesso);
+  }
+  &.info {
+    background: var(--info-fundo);
+    border-color: #2f5f9e;
+  }
+
+  ul {
+    margin: 0.25rem 0 0;
+    padding-left: 1.25rem;
+  }
+}
+
+/* Tabelas: em telas estreitas viram cartões empilhados usando data-rotulo. */
+.tabela-envoltorio {
+  overflow-x: auto;
+}
+
+table.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--superficie);
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--borda);
+    vertical-align: top;
+  }
+
+  th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--texto-suave);
+    background: var(--fundo);
+  }
+
+  .numero {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (max-width: 700px) {
+  table.tabela {
+    thead {
+      display: none;
+    }
+    tr {
+      display: block;
+      border: 1px solid var(--borda);
+      border-radius: var(--raio);
+      margin-bottom: 0.75rem;
+    }
+    td {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid var(--fundo);
+      &.numero {
+        text-align: right;
+      }
+      &::before {
+        content: attr(data-rotulo);
+        font-weight: 600;
+        color: var(--texto-suave);
+      }
+    }
+  }
+}
+
+.vazio {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.selo {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--fundo);
+  border: 1px solid var(--borda);
+
+  &.ok {
+    background: var(--sucesso-fundo);
+    color: var(--sucesso);
+    border-color: transparent;
+  }
+  &.alerta {
+    background: var(--aviso-fundo);
+    color: var(--aviso);
+    border-color: transparent;
+  }
+  &.inativo {
+    background: var(--perigo-fundo);
+    color: var(--perigo);
+    border-color: transparent;
+  }
+}
+
+/* Formulário embutido em um cartão, abaixo de uma lista */
+.painel-form {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px dashed var(--borda);
+  border-radius: var(--raio);
+  background: var(--fundo);
+
+  h3 {
+    font-size: 1rem;
+    margin: 0 0 0.75rem;
+  }
+}
+
+.ajuda {
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+/* Lista de definições (detalhes de registro) */
+dl.detalhes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin: 0;
+
+  dt {
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+  }
+  dd {
+    margin: 0;
+    font-weight: 500;
+  }
+}

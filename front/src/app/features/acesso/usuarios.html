@@ -1,0 +1,197 @@
+<div class="cabecalho-pagina">
+  <div>
+    <h1>Usuários</h1>
+    <p>Contas de acesso ao PSA Gestor. Somente o administrador cria contas.</p>
+  </div>
+  @if (modo().tipo === 'lista') {
+    <button type="button" class="botao" (click)="novo()">Nova conta</button>
+  }
+</div>
+
+@if (mensagem()) {
+  <div class="aviso sucesso" role="status">{{ mensagem() }}</div>
+}
+
+@if (modo().tipo === 'lista') {
+  <app-mensagem-erro [falha]="falhaLista()" />
+  <div class="cartao">
+    @if (carregando() && !pagina()) {
+      <p class="vazio">Carregando…</p>
+    } @else if (pagina(); as p) {
+      @if (p.items.length === 0) {
+        <p class="vazio">Nenhuma conta cadastrada.</p>
+      } @else {
+        <div class="tabela-envoltorio">
+          <table class="tabela">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Perfil</th>
+                <th>Situação</th>
+                <th><span class="visualmente-oculto">Ações</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (u of p.items; track u.id) {
+                <tr>
+                  <td data-rotulo="Nome">{{ u.nome }}</td>
+                  <td data-rotulo="E-mail">{{ u.email }}</td>
+                  <td data-rotulo="Perfil">{{ nomesPerfis[u.perfil] }}</td>
+                  <td data-rotulo="Situação">
+                    <span class="selo" [class.ok]="u.ativo" [class.inativo]="!u.ativo">
+                      {{ u.ativo ? 'Ativa' : 'Inativa' }}
+                    </span>
+                  </td>
+                  <td data-rotulo="">
+                    <button type="button" class="botao secundario pequeno" (click)="editar(u)">
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <app-paginacao
+          [pagina]="p.page"
+          [tamanho]="tamanho"
+          [total]="p.totalItems"
+          (mudar)="carregar($event)"
+        />
+      }
+    }
+  </div>
+} @else {
+  <div class="cartao">
+    <div class="cartao-cabecalho">
+      <h2>{{ editando() ? 'Editar conta' : 'Nova conta' }}</h2>
+    </div>
+    <app-mensagem-erro [falha]="falhaForm()" />
+
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      <div class="formulario">
+        <div class="campo">
+          <label for="nome" class="obrigatorio">Nome</label>
+          <input id="nome" formControlName="nome" maxlength="150" />
+        </div>
+        <div class="campo">
+          <label for="email" class="obrigatorio">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            maxlength="254"
+            autocomplete="off"
+          />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <span class="erro-campo">Informe um e-mail válido.</span>
+          }
+        </div>
+        <div class="campo">
+          <label for="perfil" class="obrigatorio">Perfil</label>
+          <select id="perfil" formControlName="perfil">
+            @for (p of perfis; track p) {
+              <option [value]="p">{{ nomesPerfis[p] }}</option>
+            }
+          </select>
+          <span class="ajuda">O administrador não herda as permissões de gestor ou técnico.</span>
+        </div>
+        @if (ehProdutor()) {
+          <div class="campo">
+            <label for="produtorId" class="obrigatorio">Código do produtor</label>
+            <input id="produtorId" type="number" min="1" formControlName="produtorId" />
+            <span class="ajuda"
+              >Identificador do cadastro feito pelo técnico. O vínculo não pode ser transferido
+              depois.</span
+            >
+            @if (form.controls.produtorId.touched && !form.controls.produtorId.value) {
+              <span class="erro-campo">Informe o produtor vinculado.</span>
+            }
+          </div>
+        }
+        @if (!editando()) {
+          <div class="campo">
+            <label for="senha" class="obrigatorio">Senha inicial</label>
+            <input id="senha" type="password" formControlName="senha" autocomplete="new-password" />
+            <span class="ajuda"
+              >Mínimo de 12 caracteres. Entregue-a ao usuário por um canal privado.</span
+            >
+            @if (form.controls.senha.touched && form.controls.senha.errors; as e) {
+              <span class="erro-campo">{{ e['senha'] ?? 'Informe a senha inicial.' }}</span>
+            }
+          </div>
+        }
+        <div class="campo">
+          <label>
+            <input type="checkbox" formControlName="ativo" />
+            Conta ativa
+          </label>
+          <span class="ajuda"
+            >Desativar ou mudar o perfil encerra as sessões abertas da conta.</span
+          >
+        </div>
+      </div>
+      <div class="acoes">
+        <button type="submit" class="botao" [disabled]="salvando()">Salvar</button>
+        <button type="button" class="botao secundario" (click)="cancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  @if (editando(); as u) {
+    <div class="cartao">
+      <h2>Bloqueio de login</h2>
+      @if (bloqueio(); as b) {
+        @if (b.bloqueado) {
+          <div class="aviso alerta">
+            Novos logins estão bloqueados por cerca de {{ minutos(b.segundosRestantes) }} min após
+            {{ b.tentativasSemSucesso }} tentativas recusadas.
+          </div>
+        } @else {
+          <p>Sem bloqueio. Tentativas recusadas consecutivas: {{ b.tentativasSemSucesso }}.</p>
+        }
+        @if (b.bloqueado || b.tentativasSemSucesso > 0) {
+          <button
+            type="button"
+            class="botao secundario"
+            (click)="desbloquear()"
+            [disabled]="salvando()"
+          >
+            Liberar login e zerar tentativas
+          </button>
+        }
+      } @else {
+        <p class="ajuda">Situação do bloqueio indisponível.</p>
+      }
+    </div>
+
+    <div class="cartao">
+      <h2>Redefinir senha</h2>
+      <div class="formulario">
+        <div class="campo">
+          <label for="novaSenha">Nova senha para {{ u.nome }}</label>
+          <input
+            id="novaSenha"
+            type="password"
+            [formControl]="novaSenha"
+            autocomplete="new-password"
+          />
+          @if (novaSenha.touched && novaSenha.errors; as e) {
+            <span class="erro-campo">{{ e['senha'] ?? 'Informe a nova senha.' }}</span>
+          }
+        </div>
+      </div>
+      <div class="acoes">
+        <button
+          type="button"
+          class="botao secundario"
+          (click)="redefinirSenha()"
+          [disabled]="salvando()"
+        >
+          Redefinir senha
+        </button>
+      </div>
+    </div>
+  }
+}
