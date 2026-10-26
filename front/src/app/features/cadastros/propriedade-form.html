@@ -1,0 +1,108 @@
+<div class="cabecalho-pagina">
+  <div>
+    <div class="migalhas"><a routerLink="/propriedades">Propriedades</a> ›</div>
+    <h1>{{ ehNovo() ? 'Nova propriedade' : 'Editar propriedade' }}</h1>
+  </div>
+</div>
+
+<app-mensagem-erro [falha]="falha()" />
+
+<div class="cartao">
+  @if (carregando()) {
+    <p class="vazio">Carregando…</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      <div class="formulario">
+        <div class="campo">
+          <label for="produtorId" class="obrigatorio">Produtor</label>
+          <select id="produtorId" formControlName="produtorId">
+            <option [ngValue]="null" disabled>Selecione…</option>
+            @for (p of produtores(); track p.id) {
+              <option [ngValue]="p.id">{{ p.nome }} (código {{ p.id }})</option>
+            }
+            @if (form.controls.produtorId.value && !produtores().length) {
+              <option [ngValue]="form.controls.produtorId.value">
+                Código {{ form.controls.produtorId.value }}
+              </option>
+            }
+          </select>
+          @if (form.controls.produtorId.touched && form.controls.produtorId.invalid) {
+            <span class="erro-campo">Selecione o produtor.</span>
+          }
+        </div>
+        <div class="campo">
+          <label for="nome" class="obrigatorio">Nome da propriedade</label>
+          <input id="nome" formControlName="nome" maxlength="150" />
+          @if (form.controls.nome.touched && form.controls.nome.invalid) {
+            <span class="erro-campo">Informe o nome.</span>
+          }
+        </div>
+        <div class="campo">
+          <label for="localidadeId" class="obrigatorio">Localidade</label>
+          <select id="localidadeId" formControlName="localidadeId">
+            <option [ngValue]="null" disabled>Selecione…</option>
+            @for (l of localidades(); track l.id) {
+              <option [ngValue]="l.id">{{ l.nome }} — {{ l.municipio }}/{{ l.uf }}</option>
+            }
+          </select>
+          @if (form.controls.localidadeId.touched && form.controls.localidadeId.invalid) {
+            <span class="erro-campo">Selecione a localidade.</span>
+          }
+          @if (!localidades().length) {
+            <span class="ajuda"
+              >Nenhuma localidade disponível. As referências são carregadas pela
+              administração.</span
+            >
+          }
+        </div>
+        <div class="campo">
+          <label for="subBaciaId">Sub-bacia</label>
+          <select id="subBaciaId" formControlName="subBaciaId">
+            <option [ngValue]="null">Não informada</option>
+            @for (s of subBacias(); track s.id) {
+              <option [ngValue]="s.id">{{ s.nome }}</option>
+            }
+          </select>
+        </div>
+        <div class="campo">
+          <label for="areaTotal" class="obrigatorio">Área total (ha)</label>
+          <input
+            id="areaTotal"
+            formControlName="areaTotal"
+            inputmode="decimal"
+            placeholder="10,5000"
+          />
+          <span class="ajuda">Em hectares, até 4 casas decimais.</span>
+          @if (form.controls.areaTotal.touched && form.controls.areaTotal.invalid) {
+            <span class="erro-campo">Informe uma área válida, por exemplo 10,5.</span>
+          }
+        </div>
+        <div class="campo">
+          <label for="carSituacao" class="obrigatorio">Cadastro Ambiental Rural (CAR)</label>
+          <select id="carSituacao" formControlName="carSituacao">
+            @for (s of situacoesCar; track s) {
+              <option [ngValue]="s">{{ nomesCar[s] }}</option>
+            }
+          </select>
+        </div>
+        @if (possuiCar()) {
+          <div class="campo">
+            <label for="carNumero" class="obrigatorio">Número do CAR</label>
+            <input id="carNumero" formControlName="carNumero" maxlength="100" />
+            @if (form.controls.carNumero.touched && form.controls.carNumero.invalid) {
+              <span class="erro-campo">Informe o número do CAR.</span>
+            }
+          </div>
+        }
+      </div>
+      <div class="acoes">
+        <button type="submit" class="botao" [disabled]="salvando()">Salvar</button>
+        @if (ehNovo()) {
+          <a routerLink="/propriedades" class="botao secundario">Cancelar</a>
+        } @else {
+          <a [routerLink]="['/propriedades', id()]" class="botao secundario">Cancelar</a>
+        }
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,56 @@
+<a class="pular" href="#conteudo">Ir para o conteúdo</a>
+
+<header class="topo">
+  <button
+    type="button"
+    class="botao-menu"
+    [attr.aria-expanded]="menuAberto()"
+    aria-controls="menu-principal"
+    (click)="alternarMenu()"
+  >
+    <span aria-hidden="true">☰</span>
+    <span class="visualmente-oculto">Menu</span>
+  </button>
+  <a routerLink="/inicio" class="marca">
+    <span class="marca-icone" aria-hidden="true">🌿</span>
+    PSA Gestor
+  </a>
+  @if (usuario(); as u) {
+    <div class="conta">
+      <span class="conta-nome">{{ u.nome }}</span>
+      <span class="conta-perfil">{{ nomePerfil() }}</span>
+    </div>
+    <button type="button" class="botao secundario pequeno" (click)="sair()" [disabled]="saindo()">
+      Sair
+    </button>
+  }
+</header>
+
+<div class="corpo">
+  <nav id="menu-principal" class="menu" [class.aberto]="menuAberto()" aria-label="Menu principal">
+    @for (grupo of grupos(); track grupo.titulo) {
+      <div class="menu-grupo">
+        <h2 class="menu-titulo">{{ grupo.titulo }}</h2>
+        <ul>
+          @for (item of grupo.itens; track item.rota) {
+            <li>
+              <a [routerLink]="item.rota" routerLinkActive="ativo" ariaCurrentWhenActive="page">
+                {{ item.rotulo }}
+                @if (item.emConstrucao) {
+                  <span class="etiqueta" title="Tela em desenvolvimento">em breve</span>
+                }
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </nav>
+  @if (menuAberto()) {
+    <div class="veu" (click)="alternarMenu()" aria-hidden="true"></div>
+  }
+
+  <main id="conteudo" class="conteudo" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

@@ -1,0 +1,46 @@
+.tela-login {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 1rem;
+  background: linear-gradient(160deg, var(--primaria-clara), var(--fundo));
+}
+
+.painel {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 2rem;
+
+  h1 {
+    margin: 0;
+    color: var(--primaria-escura);
+  }
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+  }
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+.entrar {
+  width: 100%;
+}
+
+.nota {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  text-align: center;
+}

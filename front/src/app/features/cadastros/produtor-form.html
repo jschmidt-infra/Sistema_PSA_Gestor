@@ -1,0 +1,105 @@
+<div class="cabecalho-pagina">
+  <div>
+    <div class="migalhas"><a routerLink="/produtores">Produtores</a> ›</div>
+    <h1>{{ ehNovo() ? 'Novo produtor' : form.controls.nome.value || 'Produtor' }}</h1>
+    @if (!ehNovo()) {
+      <p>Código {{ id() }}</p>
+    }
+  </div>
+</div>
+
+@if (mensagem()) {
+  <div class="aviso sucesso" role="status">{{ mensagem() }}</div>
+}
+<app-mensagem-erro [falha]="falha()" />
+
+<div class="cartao">
+  <h2>Dados do produtor</h2>
+  @if (carregando()) {
+    <p class="vazio">Carregando…</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      <div class="formulario">
+        <div class="campo largo">
+          <label for="nome" class="obrigatorio">Nome</label>
+          <input id="nome" formControlName="nome" maxlength="150" />
+          @if (form.controls.nome.touched && form.controls.nome.invalid) {
+            <span class="erro-campo">Informe o nome.</span>
+          }
+        </div>
+        <div class="campo">
+          <label for="documento">CPF ou CNPJ</label>
+          <input id="documento" formControlName="documento" inputmode="numeric" />
+          <span class="ajuda">Pode ser informado depois, mas é exigido para o contrato.</span>
+          @if (form.controls.documento.touched && form.controls.documento.invalid) {
+            <span class="erro-campo">Use 11 dígitos (CPF) ou 14 dígitos (CNPJ).</span>
+          }
+        </div>
+        <div class="campo">
+          <label for="telefone">Telefone</label>
+          <input id="telefone" type="tel" formControlName="telefone" maxlength="30" />
+        </div>
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" formControlName="email" maxlength="254" />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <span class="erro-campo">E-mail inválido.</span>
+          }
+        </div>
+        <div class="campo largo">
+          <label for="endereco">Endereço</label>
+          <input id="endereco" formControlName="endereco" maxlength="255" />
+          <span class="ajuda">Exigido para o contrato.</span>
+        </div>
+      </div>
+      @if (semContato()) {
+        <div class="aviso erro" role="alert">Informe ao menos um contato: telefone ou e-mail.</div>
+      }
+      <div class="acoes">
+        <button type="submit" class="botao" [disabled]="salvando()">Salvar</button>
+        <a routerLink="/produtores" class="botao secundario">Voltar</a>
+      </div>
+    </form>
+  }
+</div>
+
+@if (!ehNovo()) {
+  <div class="cartao">
+    <div class="cartao-cabecalho">
+      <h2>Propriedades</h2>
+      @if (podeCriarPropriedade) {
+        <a
+          routerLink="/propriedades/nova"
+          [queryParams]="{ produtorId: id() }"
+          class="botao pequeno"
+        >
+          Nova propriedade
+        </a>
+      }
+    </div>
+    @if (propriedades().length === 0) {
+      <p class="vazio">Nenhuma propriedade vinculada.</p>
+    } @else {
+      <div class="tabela-envoltorio">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Propriedade</th>
+              <th class="numero">Área total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of propriedades(); track p.id) {
+              <tr>
+                <td data-rotulo="Propriedade">
+                  <a [routerLink]="['/propriedades', p.id]">{{ p.nome }}</a>
+                </td>
+                <td data-rotulo="Área total" class="numero">{{ formatarArea(p.areaTotal) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+}
